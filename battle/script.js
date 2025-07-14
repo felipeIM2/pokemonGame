@@ -7,6 +7,7 @@ let movesData = {};
 let playerHPMap = {};
 let pcHPMap = {};
 let moves;
+let effectivenessChart = {}
 
 // Controladores para aumentar o HP dos Pokémon o HP padrão será multiplicado pelo valor de controlHpPlayer e controlHpPc.
 // Ex: se o HP padrão = 10 se controlHpPlayer = 10 o HP final = 100.
@@ -26,24 +27,17 @@ const superEffectiveSound = new Audio("sounds/super-effective.mp3");
 const battleMusic = new Audio("sounds/battle-theme.mp3");
 battleMusic.loop = true;
 
-const effectivenessChart = {
-  Electric: { Water: 2, Flying: 2, Ground: 0 },
-  Water: { Fire: 2, Rock: 2, Grass: 0.5 },
-  Fire: { Grass: 2, Ice: 2, Water: 0.5, Rock: 0.5 },
-  Grass: { Water: 2, Rock: 2, Fire: 0.5, Flying: 0.5 },
-  Rock: { Flying: 2, Fire: 2 },
-  Fighting: { Normal: 2, Rock: 2 },
-  Ghost: { Normal: 0, Psychic: 2 },
-  Normal: {},
-  Dark: { Psychic: 2 },
-  Ice: { Grass: 2, Flying: 2 },
-  Psychic: { Fighting: 2 },
-  Fairy: { Fighting: 2, Dark: 2 }
-};
 
-function getEffectiveness(attackType, targetType) {
-  return effectivenessChart[attackType]?.[targetType] || 1;
+
+function getEffectiveness(attackType, targetTypes) {
+  if (!Array.isArray(targetTypes)) targetTypes = [targetTypes];
+
+  return targetTypes.reduce((multiplier, type) => {
+    const value = effectivenessChart[attackType]?.[type] ?? 1;
+    return multiplier * value;
+  }, 1);
 }
+
 
 
 function calcDamage(attacker, defender, move) {
@@ -263,12 +257,14 @@ async function executeTurn(playerMoveName, movesSet) {
 $(document).ready(function () {
   $.when(
     $.getJSON("../db/pokemons.json"),
-    $.getJSON("../db/moves.json")
-  ).done(function (pokeRes, moveRes) {
+    $.getJSON("../db/moves.json"),
+    $.getJSON("../db/effectiveness.json")
+  ).done(function (pokeRes, moveRes, effectivenessRes) {
 
     
     const pokemons = pokeRes[0];
     moves = moveRes[0];
+    effectivenessChart = effectivenessRes[0];
 
     moves.forEach(m => {
       movesData[m.name] = m;
@@ -308,9 +304,6 @@ $(document).ready(function () {
     updateUI();
 
     
-
-    
-
     player.moves.forEach(move => {
       
       let filteredMove = moves.filter(m => m.id === move);
