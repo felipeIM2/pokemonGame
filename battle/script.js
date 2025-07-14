@@ -1,3 +1,4 @@
+
 let playerTeam = [];
 let pcTeam = [];
 let playerIndex = 0;
@@ -60,7 +61,6 @@ function getEffectiveness(attackType, targetTypes) {
   }, 1);
 }
 
-
 function calcDamage(attacker, defender, move) {
 
   const power = move.power;
@@ -72,6 +72,32 @@ function calcDamage(attacker, defender, move) {
     damage: Math.max(Math.floor(rawDamage), 0) + Number((rawDamage * controlDamagePlus/100).toFixed(0)) - Number((rawDamage * controlDamageMinus/100).toFixed(0))  , // Reduz o dano em 10% para balancear
     effective
   };
+}
+
+function executeAttack(attacker, defender, move, defenderHPMap, defenderIndex) {
+  const hitChance = move.accuracy ?? 100;
+  const hitRoll = Math.random() * 100;
+
+  if (hitRoll < hitChance) {
+    const { damage, effective } = calcDamage(attacker, defender, move);
+    defenderHPMap[defenderIndex] -= damage;
+
+    return {
+      hit: true,
+      damage,
+      effective,
+      message: `${attacker.name} usou ${move.name} causando ${damage} de dano.` +
+               (effective > 1 ? "<br><strong>É super efetivo!</strong>" :
+                effective < 1 ? "<br><em>O ataque não foi muito efetivo...</em>" : "")
+    };
+  } else {
+    return {
+      hit: false,
+      damage: 0,
+      effective: 1,
+      message: `${attacker.name} usou ${move.name}, mas errou o ataque!`
+    };
+  }
 }
 
 function updateUI() {
@@ -143,7 +169,7 @@ function checkFaintAndSwitch() {
       updateUI();
 
       $('#move-options').empty();
-      
+
       player.moves.forEach(moveId => {
         const filteredMove = moves.find(m => m.id === moveId);
         if (!filteredMove) return;
@@ -190,15 +216,12 @@ function checkFaintAndSwitch() {
 }
 
 async function executeTurn(playerMoveName, movesSet) {
-
   $('.move-btn').prop('disabled', true);
- 
+
   const playerMove = movesData[playerMoveName];
-  const pcMoveID = pc.moves[pc.moves.length > 1 ? Math.floor(Math.random() * pc.moves.length) : 0];
-  const pcMove = movesSet.filter(m => m.id === pcMoveID)[0]
-  
-  //  console.log(pcMove)
-  
+  const pcMoveID = pc.moves[Math.floor(Math.random() * pc.moves.length)];
+  const pcMove = movesSet.find(m => m.id === pcMoveID);
+
   const pPriority = playerMove.priority;
   const cPriority = pcMove.priority;
 
@@ -207,73 +230,59 @@ async function executeTurn(playerMoveName, movesSet) {
     (pPriority === cPriority && player.spe >= pc.spe)
   );
 
+  let first, second, firstMove, secondMove;
+  let firstHPMap, secondHPMap, firstIndex, secondIndex;
+
   if (playerFirst) {
-    let { damage, effective } = calcDamage(player, pc, playerMove);
-    pcHPMap[pcIndex] -= damage;
-    const sound = effective > 1 ? superEffectiveSound : attackSound;
-    sound.currentTime = 0; sound.play();
-
-    $('#log').html(`${player.name} usou ${playerMove.name} causando ${damage} de dano.`);
-    if (effective > 1) $('#log').append("<br><strong>É super efetivo!</strong>");
-    if (effective < 1) $('#log').append("<br><em>O ataque não foi muito efetivo...</em>");
-    updateUI();
-    await delay(1000);
-
-    if (pcHPMap[pcIndex] <= 0) {
-      $('#log').append(`<br>${pc.name} desmaiou!`);
-      faintSound.currentTime = 0; faintSound.play();
-      updateUI();
-      await delay(1000);
-      checkFaintAndSwitch();
-      $('.move-btn').prop('disabled', false);
-      return;
-    }
-
-    let res = calcDamage(pc, player, pcMove);
-    playerHPMap[playerIndex] -= res.damage;
-    const pcSound = res.effective > 1 ? superEffectiveSound : attackSound;
-    pcSound.currentTime = 0; pcSound.play();
-
-    $('#log').append(`<br>${pc.name} usou ${pcMove.name} causando ${res.damage} de dano.`);
-    if (res.effective > 1) $('#log').append("<br><strong>É super efetivo!</strong>");
-    if (res.effective < 1) $('#log').append("<br><em>O ataque não foi muito efetivo...</em>");
-    updateUI();
-    await delay(1000);
+    first = player; second = pc;
+    firstMove = playerMove; secondMove = pcMove;
+    firstHPMap = pcHPMap; secondHPMap = playerHPMap;
+    firstIndex = pcIndex; secondIndex = playerIndex;
   } else {
-    let res = calcDamage(pc, player, pcMove);
-    playerHPMap[playerIndex] -= res.damage;
-    const pcSound = res.effective > 1 ? superEffectiveSound : attackSound;
-    pcSound.currentTime = 0; pcSound.play();
-
-    $('#log').html(`${pc.name} usou ${pcMove.name} causando ${res.damage} de dano.`);
-    if (res.effective > 1) $('#log').append("<br><strong>É super efetivo!</strong>");
-    if (res.effective < 1) $('#log').append("<br><em>O ataque não foi muito efetivo...</em>");
-    updateUI();
-    await delay(1000);
-
-    if (playerHPMap[playerIndex] <= 0) {
-      $('#log').append(`<br>${player.name} desmaiou!`);
-      faintSound.currentTime = 0; faintSound.play();
-      updateUI();
-      await delay(1000);
-      checkFaintAndSwitch();
-      $('.move-btn').prop('disabled', false);
-      return;
-    }
-
-    let { damage, effective } = calcDamage(player, pc, playerMove);
-    pcHPMap[pcIndex] -= damage;
-    const sound = effective > 1 ? superEffectiveSound : attackSound;
-    sound.currentTime = 0; sound.play();
-
-    $('#log').append(`<br>${player.name} usou ${playerMove.name} causando ${damage} de dano.`);
-    if (effective > 1) $('#log').append("<br><strong>É super efetivo!</strong>");
-    if (effective < 1) $('#log').append("<br><em>O ataque não foi muito efetivo...</em>");
-    updateUI();
-    await delay(1000);
+    first = pc; second = player;
+    firstMove = pcMove; secondMove = playerMove;
+    firstHPMap = playerHPMap; secondHPMap = pcHPMap;
+    firstIndex = playerIndex; secondIndex = pcIndex;
   }
 
-  checkFaintAndSwitch();
+  // Turno 1
+  const firstResult = executeAttack(first, second, firstMove, firstHPMap, firstIndex);
+  $('#log').html(firstResult.message);
+  if (firstResult.hit) {
+    const sound = firstResult.effective > 1 ? superEffectiveSound : attackSound;
+    sound.currentTime = 0; sound.play();
+  }
+  updateUI();
+  await delay(1000);
+
+  if (firstHPMap[firstIndex] <= 0) {
+    $('#log').append(`<br>${second.name} desmaiou!`);
+    faintSound.currentTime = 0; faintSound.play();
+    updateUI();
+    await delay(1000);
+    checkFaintAndSwitch();
+    $('.move-btn').prop('disabled', false);
+    return;
+  }
+
+  // Turno 2
+  const secondResult = executeAttack(second, first, secondMove, secondHPMap, secondIndex);
+  $('#log').append(`<br>${secondResult.message}`);
+  if (secondResult.hit) {
+    const sound = secondResult.effective > 1 ? superEffectiveSound : attackSound;
+    sound.currentTime = 0; sound.play();
+  }
+  updateUI();
+  await delay(1000);
+
+  if (secondHPMap[secondIndex] <= 0) {
+    $('#log').append(`<br>${first.name} desmaiou!`);
+    faintSound.currentTime = 0; faintSound.play();
+    updateUI();
+    await delay(1000);
+    checkFaintAndSwitch();
+  }
+
   $('.move-btn').prop('disabled', false);
 }
 
@@ -333,9 +342,11 @@ $(document).ready(function () {
     player.moves.forEach(moveId => {
       const filteredMove = moves.find(m => m.id === moveId);
       if (!filteredMove) return;
+     
 
       const type = filteredMove.type;
-      const bgColor = typeColors[type] || '#cccccc'; // cor padrão se tipo não encontrado
+      const bgColor = typeColors[type] || '#cccccc'; 
+      
 
       $('#move-options').append(`
         <button class="btn move-btn" style="background-color:${bgColor};">${filteredMove.name}</button>
