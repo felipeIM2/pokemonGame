@@ -9,6 +9,28 @@ let pcHPMap = {};
 let moves;
 let effectivenessChart = {}
 
+const typeColors = {
+  Bug:     "#92BC2C",  // Verde inseto
+  Grass:   "#5FBD58",  // Verde folha
+  Fairy:   "#EE90E6",  // Rosa claro
+  Normal:  "#A8A77A",  // Cinza/bege
+  Dragon:  "#0C69C8",  // Azul escuro
+  Psychic: "#FA8581",  // Rosa mais forte
+  Ghost:   "#5F6DBC",  // Azul escuro meio roxo
+  Ground:  "#DA7C4D",  // Marrom claro
+  Steel:   "#5695A3",  // Azul acinzentado
+  Fire:    "#FF9C54",  // Laranja forte
+  Flying:  "#A1BBEC",  // Azul claro
+  Ice:     "#70CCBD",  // Azul esverdeado
+  Electric:"#F4D23C",  // Amarelo
+  Rock:    "#C9BB8A",  // Bege
+  Dark:    "#595761",  // Cinza escuro
+  Water:   "#539DDF",  // Azul médio
+  Fighting:"#D3425F",  // Vermelho rosado
+  Poison:  "#B763CF"   // Roxo claro
+};
+
+
 // Controladores para aumentar o HP dos Pokémon o HP padrão será multiplicado pelo valor de controlHpPlayer e controlHpPc.
 // Ex: se o HP padrão = 10 se controlHpPlayer = 10 o HP final = 100.
 let controlHpPlayer = 10;
@@ -39,7 +61,6 @@ function getEffectiveness(attackType, targetTypes) {
 }
 
 
-
 function calcDamage(attacker, defender, move) {
 
   const power = move.power;
@@ -55,8 +76,6 @@ function calcDamage(attacker, defender, move) {
 
 function updateUI() {
 
-    
-
   const currentPlayerHP = playerHPMap[playerIndex];
   const currentPcHP = pcHPMap[pcIndex];
      
@@ -64,8 +83,8 @@ function updateUI() {
   $('#pc-pokemon').text(pc.name);
   $('#player-hp').text(Math.max(currentPlayerHP, 0));
   $('#pc-hp').text(Math.max(currentPcHP, 0));
-  updateBar($('#player-hp-bar'), currentPlayerHP, player.hp);
-  updateBar($('#pc-hp-bar'), currentPcHP, pc.hp);
+  updateBar($('#player-hp-bar'), currentPlayerHP, player.maxHp);
+  updateBar($('#pc-hp-bar'), currentPcHP, pc.maxHp);
   $('#player-sprite').attr('src', `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/${player.id}.gif`);
   $('#pc-sprite').attr('src', `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/${pc.id}.gif`);
 }
@@ -124,11 +143,17 @@ function checkFaintAndSwitch() {
       updateUI();
 
       $('#move-options').empty();
-      player.moves.forEach(move => {
+      
+      player.moves.forEach(moveId => {
+        const filteredMove = moves.find(m => m.id === moveId);
+        if (!filteredMove) return;
 
-       let filteredMove = moves.filter(m => m.id === move);
-       $('#move-options').append(`<button class="btn btn-primary move-btn">${filteredMove[0].name}</button>`);
+        const type = filteredMove.type;
+        const bgColor = typeColors[type] || '#cccccc'; // cor padrão se tipo não encontrado
 
+        $('#move-options').append(`
+          <button class="btn move-btn" style="background-color:${bgColor};">${filteredMove.name}</button>
+        `);
       });
 
       $('.move-btn').on('click', function () {
@@ -165,17 +190,15 @@ function checkFaintAndSwitch() {
 }
 
 async function executeTurn(playerMoveName, movesSet) {
+
   $('.move-btn').prop('disabled', true);
-
-  
-
+ 
   const playerMove = movesData[playerMoveName];
   const pcMoveID = pc.moves[pc.moves.length > 1 ? Math.floor(Math.random() * pc.moves.length) : 0];
   const pcMove = movesSet.filter(m => m.id === pcMoveID)[0]
   
   //  console.log(pcMove)
   
-
   const pPriority = playerMove.priority;
   const cPriority = pcMove.priority;
 
@@ -261,6 +284,7 @@ $(document).ready(function () {
     $.getJSON("../db/effectiveness.json")
   ).done(function (pokeRes, moveRes, effectivenessRes) {
 
+
     
     const pokemons = pokeRes[0];
     moves = moveRes[0];
@@ -290,13 +314,15 @@ $(document).ready(function () {
 
     // Inicializa mapas de HP
     playerTeam.forEach((p, i) => {
-      p.hp = p.hp * controlHpPlayer
-      playerHPMap[i] = p.hp
+      p.maxHp = p.hp * controlHpPlayer;
+      playerHPMap[i] = p.maxHp;
     });
+
     pcTeam.forEach((p, i) => {
-      p.hp = p.hp * controlHpPc
-      pcHPMap[i] = p.hp
+      p.maxHp = p.hp * controlHpPc;
+      pcHPMap[i] = p.maxHp;
     });
+
 
     player = playerTeam[playerIndex];
     pc = pcTeam[pcIndex];
@@ -304,11 +330,16 @@ $(document).ready(function () {
     updateUI();
 
     
-    player.moves.forEach(move => {
-      
-      let filteredMove = moves.filter(m => m.id === move);
-      // console.log()
-      $('#move-options').append(`<button class="btn btn-primary move-btn">${filteredMove[0].name}</button>`);
+    player.moves.forEach(moveId => {
+      const filteredMove = moves.find(m => m.id === moveId);
+      if (!filteredMove) return;
+
+      const type = filteredMove.type;
+      const bgColor = typeColors[type] || '#cccccc'; // cor padrão se tipo não encontrado
+
+      $('#move-options').append(`
+        <button class="btn move-btn" style="background-color:${bgColor};">${filteredMove.name}</button>
+      `);
     });
 
     $('.move-btn').on('click', function () {
@@ -317,8 +348,13 @@ $(document).ready(function () {
       executeTurn(move, moves);
     });
 
+
     $('body').one('click', () => {
       // battleMusic.play().catch(() => {});
     });
   });
 });
+
+
+
+
