@@ -7,7 +7,6 @@
       currentBattle: null
   };
 
-
   const typeColors = {
     Bug:     "#4A7437",  // Verde escuro
     Dark:    "#2C2C2C",  // Preto/cinza escuro
@@ -53,14 +52,11 @@
     "Deoxys"
   ];
 
-
- 
-
-
     let pokemons;
     let moves;
     let effectiveness;
     let pcTeam = [];
+    let boss = [];
 
 
     $('#coins-balance').text(gameState.coins);
@@ -158,11 +154,8 @@
           
         // console.log(pcTeam)
 
-
-          
-
-          // localStorage.setItem('pcTeam', JSON.stringify(pcTeam.map(p => p.id)));
-          // location = "./capture"
+          localStorage.setItem('pcTeam', JSON.stringify(pcTeam.map(p => p.id)));
+          location = "./capture"
 
       })
     })
@@ -180,19 +173,19 @@
           moves = moveRes[0]; 
           effectiveness = effectivenessRes[0];
           
-          function createBoss(pcTeam){
+          function createBoss(boss){
             
-            while (pcTeam.length < 1) {
+            while (boss.length < 1) {
               const rand = pokemons[Math.floor(Math.random() * pokemons.length)];
-              pcTeam.push(rand);
+              boss.push(rand);
             }
           }
-          createBoss(pcTeam)
+          createBoss(boss)
 
           
-          if(legendary.includes(pcTeam[0].name))return createBoss(pcTeam)
+          if(legendary.includes(boss[0].name))return createBoss(boss)
 
-          localStorage.setItem('boss', JSON.stringify(pcTeam.map(p => p.id)));
+          localStorage.setItem('boss', JSON.stringify(boss.map(p => p.id)));
           location = "./boss"
 
       })
