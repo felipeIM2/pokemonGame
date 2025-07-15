@@ -1,0 +1,44 @@
+
+.card.pokemon {
+  cursor: pointer;
+  transition: transform 0.2s;
+  height: 300px;
+  border-radius: 30px;
+  padding: 10px;
+  /* background: #DD1E24; */
+  
+}
+
+
+
+.card.pokemon:hover {
+  transform: scale(1.05);
+}
+
+.card.pokemon.selected {
+  border: 3px solid #198754;
+}
+
+.sprite-wrapper {
+  height: 120px; /* ou 120px, depende do tamanho desejado */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden; /* evita sprites muito grandes ultrapassarem */
+}
+
+.pokemon-sprite {
+  max-height: 100%; 
+  max-width: 100%;
+  image-rendering: auto; /* suaviza imagem */
+  
+}
+
+#confirm-btn {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border-radius: 0;
+  z-index: 1000;
+}

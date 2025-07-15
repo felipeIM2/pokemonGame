@@ -1,20 +1,22 @@
-$(document).ready(function () {
-  $('#btn-choose').on('click', function () {
-    window.location.href = 'choose/index.html';
-  });
+// Dados fictícios de login para exemplo
+const validUsers = [
+    { username: "admin", password: "admin" },
+    { username: "misty", password: "water123" },
+    { username: "brock", password: "rock123" }
+];
 
-  $('#btn-battle').on('click', function () {
-    window.location.href = 'battle/index.html';
-  });
+document.getElementById("login-form").addEventListener("submit", function(event) {
+    event.preventDefault(); // Previne o comportamento padrão do formulário
 
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
 
-  $('#btn-random').on('click', function () {
-    alert("Selecionar 6 Pokémon aleatórios para jogador e PC.");
-    // Aqui você criará o time aleatório e inicia a batalha
-  });
+    const user = validUsers.find(user => user.username === username && user.password === password);
 
-  $('#btn-reset-team').on('click', function () {
-    localStorage.removeItem('playerTeam');
-  });
-  
+    if (user) {
+        alert("Login bem-sucedido! Bem-vindo(a) ao mundo Pokémon.");
+        window.location.href = "/game";  // Redirecionar para outra página (Exemplo: página inicial do jogo)
+    } else {
+        document.getElementById("error-message").textContent = "Usuário ou senha incorretos.";
+    }
 });

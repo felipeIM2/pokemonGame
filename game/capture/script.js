@@ -1,4 +1,5 @@
 
+
 let playerTeam = [];
 let pcTeam = [];
 let playerIndex = 0;
@@ -136,6 +137,7 @@ function checkFaintAndSwitch() {
       $('#log').append("<br>💀 Você perdeu todos os seus Pokémon!");
       $('.move-btn').prop('disabled', true);
       battleMusic.pause();
+      localStorage.removeItem('pcTeam');
       return;
     }
 
@@ -206,7 +208,8 @@ function checkFaintAndSwitch() {
       $('.move-btn').prop('disabled', true);
       battleMusic.pause();
       alert("Parabens você venceu esta batalha!");
-      return location = "../"
+      localStorage.removeItem('pcTeam'); 
+      return;
     }
 
     pc = pcTeam[pcIndex];
@@ -306,20 +309,12 @@ $(document).ready(function () {
     // console.log(moves)
 
     const playerTeamNames = JSON.parse(localStorage.getItem('playerTeam') || "[]");
-    if (!playerTeamNames || playerTeamNames.length !== 6) {
-      alert("Você precisa escolher 6 Pokémon antes de batalhar.");
-      window.location.href = "../choose/";
-      return;
-    }
+    const pcTeamNames = JSON.parse(localStorage.getItem('pcTeam') || "[]");
+
 
     playerTeam = pokemons.filter(p => playerTeamNames.includes(p.id));
-      // console.log(playerTeam);
-    while (pcTeam.length < 6) {
-      const rand = pokemons[Math.floor(Math.random() * pokemons.length)];
-      if (!playerTeamNames.includes(rand.name) && !pcTeam.includes(rand)) {
-        pcTeam.push(rand);
-      }
-    }
+    pcTeam = pokemons.filter(p => pcTeamNames.includes(p.id));
+ 
 
     // Inicializa mapas de HP
     playerTeam.forEach((p, i) => {

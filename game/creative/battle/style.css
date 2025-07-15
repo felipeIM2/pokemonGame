@@ -1,0 +1,200 @@
+  
+    html {
+      margin: 0;
+      padding: 0;
+  
+    }
+
+    /* Campo de batalha */
+    .battle-field {
+      width: 100% ;
+      background: linear-gradient(to bottom, #87CEEB 0%, #98FB98 50%, #8FBC8F 100%);
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+
+    /* Container dos Pokémon */
+    .pokemon-container {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      padding: 5px;
+      /* backdrop-filter: blur(10px); */
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    /* Sprites dos Pokémon */
+    .sprite-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 200px;
+      position: relative;
+      overflow: visible;
+    }
+
+    .pokemon-sprite {
+      max-width: 150px;
+      max-height: 150px;
+      object-fit: contain;
+      transition: all 0.3s ease;
+    }
+
+  
+
+    /* Animações de ataque */
+    @keyframes attack-shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-10px); }
+      75% { transform: translateX(10px); }
+    }
+
+    @keyframes faint-fade {
+      0% { opacity: 1; transform: scale(1); }
+      100% { opacity: 0; transform: scale(0.8) rotateZ(90deg); }
+    }
+
+
+    /* Barras de HP melhoradas */
+    .hp-bar-container {
+      background: linear-gradient(145deg, #e0e0e0, #f5f5f5);
+      width: 100%;
+      height: 25px;
+      border-radius: 15px;
+      /* margin-top: 5px; */
+      box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .hp-bar {
+      height: 100%;
+      border-radius: 15px;
+      transition: width 0.5s ease, background 0.3s ease;
+      position: relative;
+      /* background: linear-gradient(45deg, transparent 25%, rgba(255,255,255,0.2) 25%, rgba(255,255,255,0.2) 50%, transparent 50%, transparent 75%, rgba(255,255,255,0.2) 75%); */
+      background-size: 20px 20px;
+      /* animation: hp-shine 2s linear infinite; */
+    }
+
+ 
+
+    .hp-bar.green {
+      background-color: #28a745;
+      box-shadow: 0 0 10px #28a745;
+    }
+
+    .hp-bar.yellow {
+      background-color: #ffc107;
+      box-shadow: 0 0 10px #ffc107;
+    }
+
+    .hp-bar.red {
+      background-color: #dc3545;
+      box-shadow: 0 0 10px #dc3545;
+    }
+
+    /* Botões de ataque melhorados */
+    .move-btn {
+      margin: 8px;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 25px;
+      font-weight: bold;
+      font-size: 16px;
+      /* background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); */
+      color: white;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .move-btn:hover {
+      transform: translateY(-3px);
+      color: white;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+      /* background: linear-gradient(135deg, #764ba2 0%, #667eea 100%); */
+    }
+
+    .move-btn:active {
+      transform: translateY(-1px);
+    }
+
+    .move-btn:disabled {
+      background: #6c757d;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Log de batalha */
+    .battle-log {
+      background-color: #f8f0d7;
+      border: 4px solid #222;
+      border-radius: 12px;
+      font-family: 'Press Start 2P', monospace;
+      color: #111;
+      font-weight: bolder;
+      padding: 15px;
+      font-size: 16px;
+      text-align: left;
+      height: 120px;
+      overflow-y: auto;
+      margin-top: 10px;
+    }
+
+
+    /* Nomes dos Pokémon */
+    .pokemon-name {
+      font-size: 1.5rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      color: #2c3e50;
+    }
+
+    .pokemon-level {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #3498db;
+      margin-bottom: 10px;
+    }
+
+    .pokemon-hp {
+      font-size: 1rem;
+      font-weight: bold;
+      color: #2c3e50;
+   
+    }
+
+    /* Modal melhorado */
+    .modal-content {
+      border-radius: 20px;
+      border: none;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+
+    .modal-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-radius: 20px 20px 0 0;
+    }
+
+    .switch-btn {
+      border-radius: 15px;
+      padding: 15px;
+      margin: 5px;
+      transition: all 0.3s ease;
+    }
+
+    .switch-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Pokémon Battle Menu</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+    <link rel="stylesheet" href="./style.css"/>
+</head>
+
+<body>
+    <div class="navBar">
+        <div class="perfil">
+            <i class="fas fa-user-circle fa-2x"></i>
+            <span style="font-size: 18px; font-weight: 600;">Treinador</span>
+        </div>
+
+        <div class="resource-container">
+            <div class="resource-item">
+                <i class="fa-solid fa-coins"></i>
+                <span>Moedas:</span>
+                <div class="balance" id="coins-balance">100</div>
+            </div>
+
+            <div class="resource-item">
+                <i class="fa-solid fa-flask"></i>
+                <span>XP:</span>
+                <div class="balance" id="xp-balance">0</div>
+            </div>
+
+            <div class="resource-item">
+                <i class="fa-solid fa-diamond"></i>
+                <span>Gemas:</span>
+                <div class="balance" id="gem-balance">50</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div class="container">
+            <div class="game-card">
+                <h1 class="text-center mb-4" style="color: #2c3e50; font-weight: 700;">
+                    <i class="fas fa-bolt" style="color: #f39c12;"></i>
+                    Pokémon Battle Arena
+                </h1>
+
+                <div class="menu-buttons">
+                    <button class="menu-btn capture" id="capture-btn">
+                        <i class="fas fa-hand-sparkles"></i><br>
+                        Capturar Pokémon<br>
+                        <small>10 gemas</small>
+                    </button>
+                    <button class="menu-btn boss" id="boss-btn">
+                        <i class="fas fa-dragon"></i><br>
+                        Enfrentar Boss<br>
+                        <small>300 moedas</small>
+                    </button>
+                    <button class="menu-btn market" id="market-btn">
+                        <i class="fas fa-store"></i><br>
+                        Mercado<br>
+                        <small>(Em breve)</small>
+                    </button>
+
+                    <button class="menu-btn collection" id="pc-btn">
+                      <i class="fas fa-desktop"></i><br>
+                      Meus Pokémon
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="overlay" id="overlay"></div>
+    <div class="reward-popup" id="reward-popup">
+        <h3>Recompensa!</h3>
+        <div id="reward-content"></div>
+        <button class="btn btn-primary mt-3" id="close-reward">Continuar</button>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="./script.js"></script>
+</body>
+</html>

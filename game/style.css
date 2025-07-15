@@ -1,0 +1,188 @@
+  html {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      font-family: 'Arial', sans-serif;
+  }
+
+  .navBar {
+      display: flex;
+      padding: 15px 20px;
+      background: linear-gradient(90deg, #2c3e50 0%, #3498db 100%);
+      color: white;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+  }
+
+  .perfil {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+  }
+
+  .resource-container {
+      display: flex;
+      gap: 20px;
+      margin: auto;
+      margin-top: 5px;
+  }
+
+  .resource-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.1);
+      padding: 8px 12px;
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+  }
+
+  .resource-item:hover {
+      background: rgba(255,255,255,0.2);
+      transform: translateY(-2px);
+  }
+
+  .resource-item i {
+      font-size: 18px;
+      color: #f39c12;
+  }
+
+  .balance {
+      background: linear-gradient(45deg, #fff, #f8f9fa);
+      color: #2c3e50;
+      padding: 4px 12px;
+      font-size: 16px;
+      font-weight: 600;
+      min-width: 60px;
+      border-radius: 15px;
+      text-align: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+
+  .main-container {
+      padding: 30px 20px;
+  }
+
+  .game-card {
+      background: rgba(255,255,255,0.95);
+      border-radius: 20px;
+      padding: 30px;
+      margin-bottom: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      backdrop-filter: blur(10px);
+  }
+
+  .menu-buttons {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+  }
+
+  .menu-btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 20px;
+      border-radius: 15px;
+      font-size: 18px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  }
+
+  .menu-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+  }
+
+  .menu-btn:disabled {
+      background: #6c757d;
+      cursor: not-allowed;
+      transform: none;
+  }
+
+  .menu-btn.capture {
+      background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+  }
+
+  .menu-btn.boss {
+      background: linear-gradient(135deg, #fc466b 0%, #3f5efb 100%);
+  }
+
+  .menu-btn.market {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  }
+
+  .battle-arena {
+      display: none;
+      background: rgba(255,255,255,0.95);
+      border-radius: 20px;
+      padding: 30px;
+      margin-top: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  }
+
+  .pokemon-card {
+      background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+      border-radius: 15px;
+      padding: 20px;
+      margin: 10px;
+      text-align: center;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+      cursor: pointer;
+  }
+
+  .pokemon-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+  }
+
+  .pokemon-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+  }
+
+  .hp-bar {
+      background: #e9ecef;
+      height: 20px;
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 10px 0;
+  }
+
+  .hp-fill {
+      background: linear-gradient(90deg, #11998e 0%, #38ef7d 100%);
+      height: 100%;
+      transition: width 0.3s ease;
+  }
+
+
+
+  .reward-popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+      z-index: 2000;
+      display: none;
+      text-align: center;
+  }
+
+
+
+
+  .menu-btn.collection {
+    background: linear-gradient(135deg, #ff9966 0%, #ff5e62 100%);
+}

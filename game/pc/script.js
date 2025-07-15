@@ -9,14 +9,17 @@ $(document).ready(function () {
 
     // Função para carregar e exibir os cards dos pokémons
     function loadingData(data, filterName = "") {
-      $('#pokemon-list').empty(); // Limpa cards anteriores
+      $('#pokemon-list').empty(); 
 
       data
         .filter(pokemon => pokemon.name.toLowerCase().includes(filterName))
         .forEach((pokemon) => {
+          const isSelected = selected.includes(pokemon.id);
+          const selectedClass = isSelected ? 'selected' : '';
+
           const card = `
             <div class="col-md-3">
-              <div class="card pokemon" data-id="${pokemon.id}">
+              <div class="card pokemon ${selectedClass}" data-id="${pokemon.id}">
                 <p>Lv: <span id="player-lvl">1</span></p> 
                 <div class="sprite-wrapper justify-content-center align-items-center">
                   <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/${pokemon.id}.gif" class="pokemon-sprite">
@@ -63,7 +66,7 @@ $(document).ready(function () {
       let listPokes = pokes.filter(p => selected.includes(p.id));
       listPokes = listPokes.map(p => p.name);
       alert("Pokémon selecionados: " + listPokes.join(", "));
-      window.location.href = "../index.html";
+      window.location.href = "../";
     });
   });
 });

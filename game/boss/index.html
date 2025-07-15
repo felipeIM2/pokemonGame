@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Batalha Pokémon</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div >
+    <div class="battle-field" style="height:100vh;">
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <div class="pokemon-container">
+            <h5 class="text-center text-white">Seu Pokémon</h5>
+            
+            <div class="sprite-container">
+              <div class="pokemon-level">Lv: <span id="player-lvl">1</span></div> 
+              <img id="player-sprite" src="" alt="Sprite jogador" class="pokemon-sprite">
+              <div class="effect-overlay" id="player-effects"></div>
+            </div>
+
+            <h3 id="player-pokemon" class="pokemon-name text-center"></h3>
+            <div class="hp-bar-container">
+              <div id="player-hp-bar" class="hp-bar green" style="width: 100%;"></div>
+            </div>
+            <p class="pokemon-hp text-center">HP: <span id="player-hp"></span></p>
+          </div>
+        </div>
+        
+        <div class="col-md-6">
+          <div class="pokemon-container">
+            <h5 class="text-center text-white">Pokémon Selvagem</h5>
+
+            <div class="sprite-container">
+              <div class="pokemon-level">Lv: <span id="pc-lvl">1</span></div> 
+              <img id="pc-sprite" src="" alt="Sprite PC" class="pokemon-sprite">
+              <div class="effect-overlay" id="pc-effects"></div>
+            </div>
+
+            <h3 id="pc-pokemon" class="pokemon-name text-center"></h3>
+            <div class="hp-bar-container">
+              <div id="pc-hp-bar" class="hp-bar green" style="width: 100%;"></div>
+            </div>
+            <p class="pokemon-hp text-center">HP: <span id="pc-hp"></span></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col text-center" id="move-options">
+          <!-- Botões de ataque serão inseridos aqui -->
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <div id="log" class="battle-log">
+            Escolha um ataque para começar a batalha!
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de troca de Pokémon -->
+  <div class="modal fade" id="switchModal" tabindex="-1" aria-labelledby="switchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Escolha o próximo Pokémon</h5>
+        </div>
+        <div class="modal-body">
+          <div class="row" id="switch-options">
+            <!-- Botões de troca de Pokémon -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
