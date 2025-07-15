@@ -2,10 +2,19 @@ let selected = [];
 let pokes;
 let filterName = "";
 
+// Recupera seleção anterior, se houver
+const savedSelection = JSON.parse(localStorage.getItem('playerTeam'));
+if (Array.isArray(savedSelection)) {
+  selected = savedSelection;
+}
+
 $(document).ready(function () {
   // Carrega os dados do JSON
-  $.getJSON("../db/pokemons.json", function (data) {
+  $.getJSON("../db/mypokes.json", function (data) {
+
     pokes = data;
+
+    
 
     // Função para carregar e exibir os cards dos pokémons
     function loadingData(data, filterName = "") {
@@ -39,16 +48,30 @@ $(document).ready(function () {
       $('.pokemon').on('click', function () {
         const id = $(this).data('id');
 
-        if ($(this).hasClass('selected')) {
-          $(this).removeClass('selected');
-          selected = selected.filter(p => p !== id);
-        } else if (selected.length < 6) {
-          $(this).addClass('selected');
-          selected.push(id);
-        }
+          if ($(this).hasClass('selected')) {
+            $(this).removeClass('selected');
+            selected = selected.filter(p => p !== id);
 
-        $('#confirm-btn').prop('disabled', selected.length !== 6);
+          } else if (selected.length < 6) {
+            $(this).addClass('selected');
+            selected.push(id);
+
+          } else if (selected.length === 6) {
+            
+            const firstId = selected.shift(); 
+            $(`[data-id='${firstId}']`).removeClass('selected'); 
+
+            // Adiciona o novo
+            $(this).addClass('selected');
+            selected.push(id);
+          }
+
+
+        $('#confirm-btn').prop('disabled', selected.length <= 0 );
       });
+
+      // Atualiza o estado do botão após reload
+      $('#confirm-btn').prop('disabled', selected.length !== 6);
     }
 
     // Chamada inicial para exibir todos os pokémons

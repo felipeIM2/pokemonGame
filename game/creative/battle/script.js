@@ -11,25 +11,26 @@ let moves;
 let effectivenessChart = {}
 
 const typeColors = {
-  Bug:     "#92BC2C",  // Verde inseto
-  Grass:   "#5FBD58",  // Verde folha
-  Fairy:   "#EE90E6",  // Rosa claro
+  Bug:     "#4A7437",  // Verde escuro
+  Dark:    "#2C2C2C",  // Preto/cinza escuro
+  Dragon:  "#4F6DA1",  // Azul acinzentado
+  Electric:"#F4D23C",  // Amarelo vibrante
+  Fairy:   "#D46DB2",  // Rosa escuro
+  Fighting:"#C22E28",  // Vermelho queimado
+  Fire:    "#EE8130",  // Laranja forte
+  Flying:  "#A98FF3",  // Azul lavanda
+  Ghost:   "#735797",  // Roxo escuro
+  Grass:   "#7AC74C",  // Verde folha vibrante
+  Ground:  "#E2BF65",  // Bege amarelado
+  Ice:     "#96D9D6",  // Azul gelo
   Normal:  "#A8A77A",  // Cinza/bege
-  Dragon:  "#0C69C8",  // Azul escuro
-  Psychic: "#FA8581",  // Rosa mais forte
-  Ghost:   "#5F6DBC",  // Azul escuro meio roxo
-  Ground:  "#DA7C4D",  // Marrom claro
-  Steel:   "#5695A3",  // Azul acinzentado
-  Fire:    "#FF9C54",  // Laranja forte
-  Flying:  "#A1BBEC",  // Azul claro
-  Ice:     "#70CCBD",  // Azul esverdeado
-  Electric:"#F4D23C",  // Amarelo
-  Rock:    "#C9BB8A",  // Bege
-  Dark:    "#595761",  // Cinza escuro
-  Water:   "#539DDF",  // Azul médio
-  Fighting:"#D3425F",  // Vermelho rosado
-  Poison:  "#B763CF"   // Roxo claro
+  Poison:  "#A33EA1",  // Roxo escuro
+  Psychic: "#F95587",  // Rosa neon
+  Rock:    "#B6A136",  // Marrom/mostarda
+  Steel:   "#B7B7CE",  // Cinza metálico claro
+  Water:   "#6390F0"   // Azul oceano
 };
+
 
 
 // Controladores para aumentar o HP dos Pokémon o HP padrão será multiplicado pelo valor de controlHpPlayer e controlHpPc.

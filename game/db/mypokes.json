@@ -1,0 +1,14 @@
+ [
+  {
+  "registered":1,
+  "id":4,"name":"Charmander",
+  "type":["Fire"],
+  "hp":39,"atk":52,"def":43,"spe":65,"lvl":1,"evo":1,
+  "moves":[2,23,1,19]},
+  {
+  "id":7,"name":"Squirtle",
+  "type":["Water"],
+  "hp":44,"atk":48,"def":65,"spe":43,"lvl":1,"evo":1,
+  "moves":[22,3,1,19]
+  }
+]
