@@ -1,0 +1,11 @@
+[
+  {
+    "id": 1,
+    "name":"tester",
+    "resources":[{
+      "coins": 1000,
+      "gems": 100,
+      "xp": 800
+    }]
+  }
+]

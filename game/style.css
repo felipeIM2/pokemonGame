@@ -132,6 +132,10 @@ html {
     background: linear-gradient(135deg, #ff9966 0%, #ff5e62 100%);
 }
 
+.menu-btn.bag {
+    background: linear-gradient(135deg, #883701 10%, #b66e4a 90%);
+}
+
 
 .reward-popup {
     position: fixed;

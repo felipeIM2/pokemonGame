@@ -1,11 +1,5 @@
   
-  let gameState = {
-      coins: 1500,
-      gems: 50,
-      xp: 0,
-      capturedPokemon: [],
-      currentBattle: null
-  };
+  let gameState;
 
   const typeColors = {
     Bug:     "#4A7437",  // Verde escuro
@@ -60,14 +54,27 @@
     let playerTeam = localStorage.getItem("playerTeam") || [];
 
 
-    $('#coins-balance').text(gameState.coins);
-    $('#xp-balance').text(gameState.xp);
-    $('#gem-balance').text(gameState.gems);
+
 
 
     $(document).ready(() => {
-      
-      $.getJSON("./db/pokedex.json").done(function (pokemons) {
+      $.when(
+      $.getJSON("./db/perfil.json"),
+      $.getJSON("./db/pokedex.json")).done(function (perfil, pokemons) {
+
+        let getPerfil = perfil[0][0]
+        
+        gameState = {
+          coins: getPerfil.resources[0].coins,
+          gems: getPerfil.resources[0].gems,
+          xp: getPerfil.resources[0].xp,
+          capturedPokemon: []
+        }
+
+        $('#coins-balance').text(gameState.coins);
+        $('#xp-balance').text(gameState.xp);
+        $('#gem-balance').text(gameState.gems);
+
         const playerTeam = JSON.parse(localStorage.getItem('playerTeam') || "[]");
         const findteam = pokemons.filter(p => playerTeam.includes(p.id));
 
@@ -205,3 +212,5 @@
     $("#market-btn").click(() => alert("Módulo em manutenção!!") )
 
     $("#pc-btn").click(() => location = "./pc");
+
+    $("#bag-btn").click(() => alert("Módulo em manutenção!!"));
