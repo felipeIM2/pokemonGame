@@ -45,10 +45,10 @@ let controlDamagePlus = 0;
 
 
 
-const attackSound = new Audio("sounds/attack.mp3");
-const faintSound = new Audio("sounds/faint.mp3");
-const superEffectiveSound = new Audio("sounds/super-effective.mp3");
-const battleMusic = new Audio("sounds/battle-theme.mp3");
+const attackSound = new Audio("../../sounds/attack.mp3");
+const faintSound = new Audio("../../sounds/faint.mp3");
+const superEffectiveSound = new Audio("../../sounds/super-effective.mp3");
+const battleMusic = new Audio("../../sounds/battle-theme.mp3");
 battleMusic.loop = true;
 
 
@@ -289,7 +289,7 @@ async function executeTurn(playerMoveName, movesSet) {
 
 $(document).ready(function () {
   $.when(
-    $.getJSON("../../db/pokemons.json"),
+    $.getJSON("../../db/pokedex.json"),
     $.getJSON("../../db/moves.json"),
     $.getJSON("../../db/effectiveness.json")
   ).done(function (pokeRes, moveRes, effectivenessRes) {

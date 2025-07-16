@@ -4,7 +4,7 @@ let filterName = "";
 
 $(document).ready(function () {
   // Carrega os dados do JSON
-  $.getJSON("../../db/pokemons.json", function (data) {
+  $.getJSON("../../db/pokedex.json", function (data) {
     pokes = data;
 
     // Função para carregar e exibir os cards dos pokémons

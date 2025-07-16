@@ -10,7 +10,7 @@ if (Array.isArray(savedSelection)) {
 
 $(document).ready(function () {
   // Carrega os dados do JSON
-  $.getJSON("../db/mypokes.json", function (data) {
+  $.getJSON("../db/pc.json", function (data) {
 
     pokes = data;
 

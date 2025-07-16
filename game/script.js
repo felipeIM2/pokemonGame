@@ -1,6 +1,6 @@
-    // Game state
+  
   let gameState = {
-      coins: 500,
+      coins: 1500,
       gems: 50,
       xp: 0,
       capturedPokemon: [],
@@ -56,7 +56,8 @@
     let moves;
     let effectiveness;
     let pcTeam = [];
-    let boss = [];
+    let boss = localStorage.getItem("boss") || [];
+    let playerTeam = localStorage.getItem("playerTeam") || [];
 
 
     $('#coins-balance').text(gameState.coins);
@@ -66,7 +67,7 @@
 
     $(document).ready(() => {
       
-      $.getJSON("./db/pokemons.json").done(function (pokemons) {
+      $.getJSON("./db/pokedex.json").done(function (pokemons) {
         const playerTeam = JSON.parse(localStorage.getItem('playerTeam') || "[]");
         const findteam = pokemons.filter(p => playerTeam.includes(p.id));
 
@@ -90,13 +91,14 @@
 
     $("#capture-btn").on("click", () => { 
         $.when(
-        $.getJSON("./db/pokemons.json"),
+        $.getJSON("./db/pokedex.json"),
         $.getJSON("./db/moves.json"),
         $.getJSON("./db/effectiveness.json")
         ).done(function (pokeRes, moveRes, effectivenessRes) {
             
-         if(gameState.gems < 10) return alert("Voce não tem gemas suficientes para capturar um pokemons!")
-         
+         if(gameState.coins < 1000) return alert("Voce não tem moedas suficientes para capturar um pokemons!");
+         if(playerTeam.length <= 0) return alert("Favor selecionar um pokemon para batalhar!");
+          
           pokemons = pokeRes[0];
           moves = moveRes[0]; 
           effectiveness = effectivenessRes[0];
@@ -162,31 +164,40 @@
     
     $("#boss-btn").on("click", () => { 
         $.when(
-        $.getJSON("./db/pokemons.json"),
+        $.getJSON("./db/pokedex.json"),
         $.getJSON("./db/moves.json"),
         $.getJSON("./db/effectiveness.json")
         ).done(function (pokeRes, moveRes, effectivenessRes) {
             
-         if(gameState.coins < 300) return alert("Voce não tem moedas suficientes para enfrentar um boss!")
-         
+         if(gameState.gems < 10) return alert("Voce não tem gemas suficientes para enfrentar um boss!");
+         if(playerTeam.length <= 0) return alert("Favor selecionar um pokemon para batalhar!");
+
           pokemons = pokeRes[0];
           moves = moveRes[0]; 
           effectiveness = effectivenessRes[0];
           
-          function createBoss(boss){
-            
-            while (boss.length < 1) {
-              const rand = pokemons[Math.floor(Math.random() * pokemons.length)];
-              boss.push(rand);
+          if(boss.length === 0) {
+
+            function createBoss(boss){
+              
+              while (boss.length < 1) {
+                const rand = pokemons[Math.floor(Math.random() * pokemons.length)];
+                boss.push(rand);
+              }
             }
-          }
-          createBoss(boss)
+              createBoss(boss)
 
-          
-          if(legendary.includes(boss[0].name))return createBoss(boss)
+            if(legendary.includes(boss[0].name))return createBoss(boss)
 
-          localStorage.setItem('boss', JSON.stringify(boss.map(p => p.id)));
-          location = "./boss"
+            localStorage.setItem('boss', JSON.stringify(boss.map(p => p.id)));
+            location = "./boss"
+
+          } else {
+
+            localStorage.setItem('boss', boss);
+            location = "./boss"
+
+          }   
 
       })
     })

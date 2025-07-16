@@ -10,6 +10,7 @@ let playerHPMap = {};
 let pcHPMap = {};
 let moves;
 let effectivenessChart = {}
+let lastBossHP = Number(localStorage.getItem("bossHp")) || []
 
 const typeColors = {
   Bug:     "#92BC2C",  // Verde inseto
@@ -45,10 +46,10 @@ let controlDamagePlus = 0;
 
 
 
-const attackSound = new Audio("sounds/attack.mp3");
-const faintSound = new Audio("sounds/faint.mp3");
-const superEffectiveSound = new Audio("sounds/super-effective.mp3");
-const battleMusic = new Audio("sounds/battle-theme.mp3");
+const attackSound = new Audio("../sounds/attack.mp3");
+const faintSound = new Audio("../sounds/faint.mp3");
+const superEffectiveSound = new Audio("../sounds/super-effective.mp3");
+const battleMusic = new Audio("../sounds/battle-theme.mp3");
 battleMusic.loop = true;
 
 
@@ -101,10 +102,12 @@ function executeAttack(attacker, defender, move, defenderHPMap, defenderIndex) {
   }
 }
 
-function updateUI() {
 
-  const currentPlayerHP = playerHPMap[playerIndex];
+
+function updateUI() {
+  
   const currentPcHP = pcHPMap[pcIndex];
+  const currentPlayerHP = playerHPMap[playerIndex];
      
   $('#player-pokemon').text(player.name);
   $('#pc-pokemon').text(pc.name);
@@ -112,6 +115,7 @@ function updateUI() {
   $('#pc-hp').text(Math.max(currentPcHP, 0));
   updateBar($('#player-hp-bar'), currentPlayerHP, player.maxHp);
   updateBar($('#pc-hp-bar'), currentPcHP, pc.maxHp);
+  checkFaintAndSwitch(currentPcHP)
   $('#player-sprite').attr('src', `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/${player.id}.gif`);
   $('#pc-sprite').attr('src', `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/${pc.id}.gif`);
 }
@@ -126,7 +130,7 @@ function delay(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function checkFaintAndSwitch() {
+function checkFaintAndSwitch(currentPcHP) {
 
   if (playerHPMap[playerIndex] <= 0) {
     const available = playerTeam
@@ -137,8 +141,9 @@ function checkFaintAndSwitch() {
       $('#log').append("<br>💀 Você perdeu todos os seus Pokémon!");
       $('.move-btn').prop('disabled', true);
       battleMusic.pause();
-      localStorage.removeItem('pcTeam');
-      return;
+      setTimeout(()=> alert("Você perdeu todos os seus Pokémon!") ,700)
+      localStorage.setItem('bossHp', currentPcHP);
+      return setTimeout(() => location = "../" , 800);
     }
 
     $('#switch-options').empty();
@@ -207,9 +212,10 @@ function checkFaintAndSwitch() {
       $('#log').append("<br>🏆 Você venceu! O PC ficou sem Pokémon!");
       $('.move-btn').prop('disabled', true);
       battleMusic.pause();
-      alert("Parabens você venceu esta batalha!");
-      localStorage.removeItem('pcTeam'); 
-      return setTimeout(() => location = "../" , 1500);
+      setTimeout(() => location = alert("Parabens você venceu esta batalha!") , 700);
+      localStorage.removeItem('boss'); 
+      localStorage.removeItem('bossHp'); 
+      return setTimeout(() => location = "../" , 800);
     }else {
       pc = pcTeam[pcIndex];
       updateUI();
@@ -291,7 +297,7 @@ async function executeTurn(playerMoveName, movesSet) {
 
 $(document).ready(function () {
   $.when(
-    $.getJSON("../db/pokemons.json"),
+    $.getJSON("../db/pokedex.json"),
     $.getJSON("../db/moves.json"),
     $.getJSON("../db/effectiveness.json")
   ).done(function (pokeRes, moveRes, effectivenessRes) {
@@ -322,9 +328,17 @@ $(document).ready(function () {
       playerHPMap[i] = p.maxHp;
     });
 
+    
     pcTeam.forEach((p, i) => {
-      p.maxHp = p.hp * controlHpPc;
-      pcHPMap[i] = p.maxHp;
+
+      if(lastBossHP.length <= 0){
+        p.maxHp = p.hp * controlHpPc;
+        pcHPMap[i] = p.maxHp;
+      }else {
+        p.maxHp = p.hp * controlHpPc 
+        pcHPMap[i] = p.maxHp - p.maxHp + lastBossHP;
+      }
+        
     });
 
 
