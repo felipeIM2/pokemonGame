@@ -15,7 +15,7 @@ document.getElementById("login-form").addEventListener("submit", function(event)
 
     if (user) {
         alert("Login bem-sucedido! Bem-vindo(a) ao mundo Pokémon.");
-        window.location.href = "/game";  // Redirecionar para outra página (Exemplo: página inicial do jogo)
+        window.location.href = "./game";  // Redirecionar para outra página (Exemplo: página inicial do jogo)
     } else {
         document.getElementById("error-message").textContent = "Usuário ou senha incorretos.";
     }
