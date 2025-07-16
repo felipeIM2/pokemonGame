@@ -76,11 +76,11 @@
         $('#gem-balance').text(gameState.gems);
 
         const playerTeam = JSON.parse(localStorage.getItem('playerTeam') || "[]");
-        const findteam = pokemons.filter(p => playerTeam.includes(p.id));
-
+        const findteam = pokemons[0].filter(p => playerTeam.includes(p.id));
+        console.log(pokemons)
         
         let teamHTML = findteam.map(pokemon => {
-          
+          console.log(pokemon)
           const bgColor = typeColors[pokemon.type[0]] || "#FFF"; 
 
           return `
