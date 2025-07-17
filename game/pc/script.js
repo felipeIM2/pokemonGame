@@ -14,7 +14,6 @@ $(document).ready(function () {
 
     pokes = data;
 
-    
 
     // Função para carregar e exibir os cards dos pokémons
     function loadingData(data, filterName = "") {
@@ -25,10 +24,10 @@ $(document).ready(function () {
         .forEach((pokemon) => {
           const isSelected = selected.includes(pokemon.id);
           const selectedClass = isSelected ? 'selected' : '';
-
+            
           const card = `
             <div class="col-md-3">
-              <div class="card pokemon ${selectedClass}" data-id="${pokemon.id}">
+              <div class="card pokemon ${selectedClass}" data-id="${pokemon.register}">
                 <p>Lv: <span id="player-lvl">1</span></p> 
                 <div class="sprite-wrapper justify-content-center align-items-center">
                   <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/${pokemon.id}.gif" class="pokemon-sprite">
@@ -86,7 +85,7 @@ $(document).ready(function () {
     // Botão de confirmação
     $('#confirm-btn').on('click', function () {
       localStorage.setItem('playerTeam', JSON.stringify(selected));
-      let listPokes = pokes.filter(p => selected.includes(p.id));
+      let listPokes = pokes.filter(p => selected.includes(p.register));
       listPokes = listPokes.map(p => p.name);
       alert("Pokémon selecionados: " + listPokes.join(", "));
       window.location.href = "../";

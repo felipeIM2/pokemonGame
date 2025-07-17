@@ -37,12 +37,14 @@ const typeColors = {
 // Controladores para aumentar o HP dos Pokémon o HP padrão será multiplicado pelo valor de controlHpPlayer e controlHpPc.
 // Ex: se o HP padrão = 10 se controlHpPlayer = 10 o HP final = 100.
 let controlHpPlayer = 10;
-let controlHpPc = 10;
+let controlHpPc = 100;
 
 // Controladores de dano causado pelos ataques, o dano final será reduzido ou acrescido em 10% do dano calculado.
 // Lembrando que se os dois forem valores iguais o dano final será o mesmo. 
 let controlDamageMinus = 0;
 let controlDamagePlus = 0;
+
+let bossDamage = 100;
 
 
 
@@ -51,7 +53,6 @@ const faintSound = new Audio("../sounds/faint.mp3");
 const superEffectiveSound = new Audio("../sounds/super-effective.mp3");
 const battleMusic = new Audio("../sounds/battle-theme.mp3");
 battleMusic.loop = true;
-
 
 
 function getEffectiveness(attackType, targetTypes) {
@@ -102,8 +103,6 @@ function executeAttack(attacker, defender, move, defenderHPMap, defenderIndex) {
   }
 }
 
-
-
 function updateUI() {
   
   const currentPcHP = pcHPMap[pcIndex];
@@ -131,29 +130,36 @@ function delay(ms) {
 }
 
 function checkFaintAndSwitch(currentPcHP) {
-
+  
   if (playerHPMap[playerIndex] <= 0) {
+    // Encontra Pokémon disponíveis para troca
     const available = playerTeam
       .map((poke, idx) => ({ ...poke, index: idx }))
       .filter(p => playerHPMap[p.index] > 0 && p.index !== playerIndex);
 
+    
     if (available.length === 0) {
       $('#log').append("<br>💀 Você perdeu todos os seus Pokémon!");
       $('.move-btn').prop('disabled', true);
       battleMusic.pause();
-      setTimeout(()=> alert("Você perdeu todos os seus Pokémon!") ,700)
+      localStorage.removeItem('pcTeam');
       localStorage.setItem('bossHp', currentPcHP);
-      return setTimeout(() => location = "../" , 800);
+      alert("Você perdeu todos os seus Pokémon!")
+      setTimeout(() => location = "../", 1500);
+      return; 
     }
 
     $('#switch-options').empty();
+    
+    
     playerTeam.forEach((poke, idx) => {
-      if (idx === playerIndex) return;
+      if (idx === playerIndex) return; 
+
       const hp = playerHPMap[idx];
       const disabled = hp <= 0 ? 'disabled' : '';
-      const percent = Math.max((hp / poke.hp) * 100, 0);
+      const percent = Math.max((hp / poke.maxHp) * 100, 0);
       const color = hp <= 0 ? 'red' : percent > 60 ? 'green' : percent > 30 ? 'yellow' : 'red';
-
+      
       $('#switch-options').append(`
         <div class="col-md-4 mb-3">
           <button class="btn btn-outline-${hp <= 0 ? 'secondary' : 'success'} w-100 switch-btn" data-index="${idx}" ${disabled}>
@@ -166,62 +172,89 @@ function checkFaintAndSwitch(currentPcHP) {
       `);
     });
 
-    const modal = new bootstrap.Modal(document.getElementById('switchModal'));
-    modal.show();
+    
+    $(document).off('click', '.switch-btn');
+    $(document).on('click', '.switch-btn', function() {
+      const newIndex = parseInt($(this).data('index'));
+      
+      if (playerHPMap[newIndex] <= 0) {
+        return;
+      }
 
-    $('.switch-btn').on('click', function () {
-      const chosen = parseInt($(this).data('index'));
-      playerIndex = chosen;
+      playerIndex = newIndex;
       player = playerTeam[playerIndex];
+      
+  
+      const modal = bootstrap.Modal.getInstance($('#switchModal'));
+      if (modal) {
+        modal.hide();
+      }
+
       updateUI();
+      updateMoveButtons();
+      
+      $('#log').append(`<br>⚡ Você enviou ${player.name}!`);
 
-      $('#move-options').empty();
-
-      player.moves.forEach(moveId => {
-        const filteredMove = moves.find(m => m.id === moveId);
-        if (!filteredMove) return;
-
-        const type = filteredMove.type;
-        const bgColor = typeColors[type] || '#cccccc'; // cor padrão se tipo não encontrado
-
-        $('#move-options').append(`
-          <button class="btn move-btn" style="background-color:${bgColor};">${filteredMove.name}</button>
-        `);
-      });
-
-      $('.move-btn').on('click', function () {
-        if (playerHPMap[playerIndex] <= 0 || pcHPMap[pcIndex] <= 0) return;
-        const move = $(this).text();
-        executeTurn(move, moves);
-      });
-
-      $('#log').append(`<br>⚠️ Você enviou ${player.name}!`);
-      modal.hide();
+      $('.move-btn').prop('disabled', false);
     });
+
+    const existingModal = bootstrap.Modal.getInstance($('#switchModal'));
+    if (!existingModal || !existingModal._isShown) {
+      const modal = new bootstrap.Modal($('#switchModal'));
+      modal.show();
+    }
 
     return;
   }
 
+
   if (pcHPMap[pcIndex] <= 0) {
+   
     pcIndex++;
     while (pcIndex < pcTeam.length && pcHPMap[pcIndex] <= 0) {
       pcIndex++;
     }
 
+
     if (pcIndex >= pcTeam.length) {
       $('#log').append("<br>🏆 Você venceu! O PC ficou sem Pokémon!");
       $('.move-btn').prop('disabled', true);
       battleMusic.pause();
-      setTimeout(() => location = alert("Parabens você venceu esta batalha!") , 700);
-      localStorage.removeItem('boss'); 
+      alert("Parabéns você venceu esta batalha!");
+      localStorage.removeItem('pcTeam'); 
       localStorage.removeItem('bossHp'); 
-      return setTimeout(() => location = "../" , 800);
-    }else {
-      pc = pcTeam[pcIndex];
-      updateUI();
-      $('#log').append(`<br>⚠️ O PC enviou ${pc.name}!`);
+      localStorage.removeItem('boss'); 
+
+      return setTimeout(() => location = "../", 1000);
     }
+
+    pc = pcTeam[pcIndex];
+    updateUI();
+    $('#log').append(`<br>⚠️ O PC enviou ${pc.name}!`);
   }
+}
+
+function updateMoveButtons() {
+  $('#move-options').empty();
+  
+  player.moves.forEach(moveId => {
+    const filteredMove = moves.find(m => m.id === moveId);
+    if (!filteredMove) return;
+
+    const type = filteredMove.type;
+    const bgColor = typeColors[type] || '#cccccc'; 
+
+    $('#move-options').append(`
+      <button class="btn move-btn" style="background-color:${bgColor};">${filteredMove.name}</button>
+    `);
+  });
+
+  // Reaplica o event listener para os novos botões
+  $('.move-btn').off('click').on('click', function () {
+    if (playerHPMap[playerIndex] <= 0 || pcHPMap[pcIndex] <= 0) return;
+    const move = $(this).text();
+    executeTurn(move, moves);
+  });
 }
 
 async function executeTurn(playerMoveName, movesSet) {
@@ -247,11 +280,16 @@ async function executeTurn(playerMoveName, movesSet) {
     firstMove = playerMove; secondMove = pcMove;
     firstHPMap = pcHPMap; secondHPMap = playerHPMap;
     firstIndex = pcIndex; secondIndex = playerIndex;
+    pcMove.power = pcMove.power + (pcMove.power * bossDamage/100)
+
   } else {
     first = pc; second = player;
     firstMove = pcMove; secondMove = playerMove;
     firstHPMap = playerHPMap; secondHPMap = pcHPMap;
     firstIndex = playerIndex; secondIndex = pcIndex;
+    pcMove.power = pcMove.power + (pcMove.power * bossDamage/100)
+
+    // console.log(pcMove.power)
   }
 
   // Turno 1
@@ -298,13 +336,16 @@ async function executeTurn(playerMoveName, movesSet) {
 $(document).ready(function () {
   $.when(
     $.getJSON("../db/pokedex.json"),
+    $.getJSON("../db/pc.json"),
     $.getJSON("../db/moves.json"),
     $.getJSON("../db/effectiveness.json")
-  ).done(function (pokeRes, moveRes, effectivenessRes) {
+  ).done(function (pokeRes, pcRes, moveRes, effectivenessRes) {
 
 
     
     const pokemons = pokeRes[0];
+    const pcPlayer = pcRes[0];
+
     moves = moveRes[0];
     effectivenessChart = effectivenessRes[0];
 
@@ -318,7 +359,7 @@ $(document).ready(function () {
     const boss = JSON.parse(localStorage.getItem('boss') || "[]");
 
 
-    playerTeam = pokemons.filter(p => playerTeamNames.includes(p.id));
+    playerTeam = pcPlayer.filter(p => playerTeamNames.includes(p.register));
     pcTeam = pokemons.filter(p => boss.includes(p.id));
  
 
@@ -336,7 +377,7 @@ $(document).ready(function () {
         pcHPMap[i] = p.maxHp;
       }else {
         p.maxHp = p.hp * controlHpPc 
-        pcHPMap[i] = p.maxHp - p.maxHp + lastBossHP;
+        pcHPMap[i] = (p.maxHp - p.maxHp) + lastBossHP;
       }
         
     });

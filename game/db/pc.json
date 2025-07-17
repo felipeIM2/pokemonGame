@@ -1,32 +1,40 @@
  [
   {
-    "registered":1,
+    "register":1,
     "id":4,
     "name":"Charmander",
     "type":["Fire"],
-    "hp":39,"atk":52,"def":43,"spe":65,"lvl":1,"evo":1,
+    "hp":39,
+    "atk":52,
+    "def":43,
+    "spe":65,
+    "lvl":1,
+    "evo":1,
     "moves":[2,23,1,19]},
   {
-    "registered":2,
+    "register":2,
     "id":7,
     "name":"Squirtle",
     "type":["Water"],
-    "status":{
-      "hp":44,
-      "atk":48,
-      "def":65,
-      "spe":43,
-      "lvl":1,
-      "evo":1
-    },
+    "hp":44,
+    "atk":48,
+    "def":65,
+    "spe":43,
+    "lvl":1,
+    "evo":1,
     "moves":[22,3,1,19]
   },
   {
-    "registered":3,
+    "register":3,
     "id":1,
     "name":"Bulbasaur",
     "type":["Grass","Poison"],
-    "hp":45,"atk":49,"def":49,"spe":45,"lvl":1,"evo":1,
+    "hp":45,
+    "atk":49,
+    "def":49,
+    "spe":45,
+    "lvl":1,
+    "evo":1,
     "moves":[4,50,1,19]
   }
 ]

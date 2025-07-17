@@ -131,10 +131,6 @@ function delay(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function clearLog() {
-  $('#log').empty();
-}
-
 function checkFaintAndSwitch() {
   if (playerHPMap[playerIndex] <= 0) {
     const available = playerTeam
@@ -179,7 +175,6 @@ function checkFaintAndSwitch() {
       player = playerTeam[playerIndex];
       updateUI();
       refreshMoveButtons();
-      clearLog();
       $('#log').append(`⚠️ Você enviou ${player.name}!`);
       modal.hide();
       enableActionButtons();
@@ -235,7 +230,7 @@ function refreshMoveButtons() {
 async function executeTurn(playerMoveName, movesSet) {
   disableActionButtons();
   $('.move-btn').prop('disabled', true);
-  clearLog();
+  
 
   const playerMove = movesData[playerMoveName];
   const pcMoveID = pc.moves[Math.floor(Math.random() * pc.moves.length)];
@@ -304,7 +299,7 @@ async function executeTurn(playerMoveName, movesSet) {
   }
 
   setTimeout(() => {
-    clearLog();
+    
   }, 2000);
 
   enableActionButtons();
@@ -313,7 +308,7 @@ async function executeTurn(playerMoveName, movesSet) {
 
 async function pcAttackAfterSwitch() {
   disableActionButtons();
-  clearLog();
+  
   
   const pcMoveID = pc.moves[Math.floor(Math.random() * pc.moves.length)];
   const pcMove = moves.find(m => m.id === pcMoveID);
@@ -339,7 +334,7 @@ async function pcAttackAfterSwitch() {
     checkFaintAndSwitch();
   } else {
     setTimeout(() => {
-      clearLog();
+      
     }, 2000);
   }
   
@@ -349,10 +344,14 @@ async function pcAttackAfterSwitch() {
 $(document).ready(function () {
   $.when(
     $.getJSON("../db/pokedex.json"),
+    $.getJSON("../db/pc.json"),
     $.getJSON("../db/moves.json"),
     $.getJSON("../db/effectiveness.json")
-  ).done(function (pokeRes, moveRes, effectivenessRes) {
+  ).done(function (pokeRes, pcRes, moveRes, effectivenessRes) {
+
     const pokemons = pokeRes[0];
+    const pcPlayer = pcRes[0]
+
     moves = moveRes[0];
     effectivenessChart = effectivenessRes[0];
 
@@ -363,10 +362,12 @@ $(document).ready(function () {
     const playerTeamNames = JSON.parse(localStorage.getItem('playerTeam') || "[]");
     const pcTeamNames = JSON.parse(localStorage.getItem('pcTeam') || "[]");
 
-    playerTeam = pokemons.filter(p => playerTeamNames.includes(p.id));
+    playerTeam = pcPlayer.filter(p => playerTeamNames.includes(p.register));
     pcTeam = pokemons.filter(p => pcTeamNames.includes(p.id));
 
+    
     playerTeam.forEach((p, i) => {
+      
       p.maxHp = p.hp * controlHpPlayer;
       playerHPMap[i] = p.maxHp;
     });
@@ -395,7 +396,7 @@ $('#btn-switch').on('click', function () {
   if (playerHPMap[playerIndex] <= 0) return;
   
   // Configura o modal
-  const modal = new bootstrap.Modal(document.getElementById('switchModal'));
+  const modal = new bootstrap.Modal($('#switchModal'));
   
   // Limpa e preenche as opções
   $('#switch-options').empty();
@@ -421,10 +422,6 @@ $('#btn-switch').on('click', function () {
   // Mostra o modal
   modal.show();
 
-  // Adiciona evento para quando o modal é escondido
-  $('#switchModal').on('hidden.bs.modal', function () {
-    enableAllButtons();
-  });
 
   // Configura o clique nos botões de troca
   $('.switch-btn').off('click').on('click', async function () {
@@ -433,7 +430,7 @@ $('#btn-switch').on('click', function () {
     player = playerTeam[playerIndex];
     updateUI();
     refreshMoveButtons();
-    clearLog();
+    
     $('#log').html(`⚠️ Você enviou ${player.name}!`);
     modal.hide();
     
@@ -444,10 +441,10 @@ $('#btn-switch').on('click', function () {
 
 $('#btn-bag').on('click', function () {
   disableActionButtons();
-  clearLog();
+  //  clearLog();
   $('#log').html('🎒 Você abriu a mochila... (função em construção)');
   setTimeout(() => {
-    clearLog();
+    
     enableActionButtons();
   }, 2000);
 });
@@ -455,7 +452,7 @@ $('#btn-bag').on('click', function () {
 $('#btn-run').on('click', async function () {
   disableActionButtons();
   const chance = Math.random();
-  clearLog();
+  
 
   if (chance < 0.5) {
     $('#log').html('🏃‍♂️ Você tentou fugir... mas não conseguiu!');

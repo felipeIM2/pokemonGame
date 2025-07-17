@@ -183,7 +183,7 @@ html {
 
 #selected-pokemon {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
     gap: 20px;
     place-items: center;
 }
@@ -222,6 +222,9 @@ html {
         flex-direction: column;
         padding: 10px 15px;
         gap: 10px;
+    }
+    #selected-pokemon {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     }
 
     .perfil {

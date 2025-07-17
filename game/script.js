@@ -60,7 +60,7 @@
     $(document).ready(() => {
       $.when(
       $.getJSON("./db/perfil.json"),
-      $.getJSON("./db/pokedex.json")).done(function (perfil, pokemons) {
+      $.getJSON("./db/pc.json")).done(function (perfil, pokemons) {
 
         let getPerfil = perfil[0][0]
         
@@ -77,11 +77,12 @@
         $('#perfil-name').text(getPerfil.name);
 
         const playerTeam = JSON.parse(localStorage.getItem('playerTeam') || "[]");
-        const findteam = pokemons[0].filter(p => playerTeam.includes(p.id));
-        console.log(pokemons)
+        const findteam = pokemons[0].filter(p => playerTeam.includes(p.register));
+        // console.log(pokemons)
         
         let teamHTML = findteam.map(pokemon => {
-          console.log(pokemon)
+          
+          // console.log(pokemon)
           const bgColor = typeColors[pokemon.type[0]] || "#FFF"; 
 
           return `
