@@ -16,10 +16,21 @@
 
 <body>
     <div class="navBar">
-        <div class="perfil">
-            <i class="fas fa-user-circle fa-2x"></i>
-            <span style="font-weight: 600;">Treinador</span>
+        
+        <div style="display: flex; gap: 20px;">
+
+            <h4 class="text-center" style="font-weight: 700;">
+                <i class="fas fa-bolt" style="color: #f39c12;"></i>
+                Pokémon Arena
+            </h4>
+            <!-- <div class="perfil" style=" gap: 14px;">
+                <i class="fas fa-user-circle fa-2x" style="cursor: pointer;"></i>
+                <span class="perfil-name" id="perfil-name">Treinador</span  >
+            </div> -->
+
+
         </div>
+
 
         <div class="resource-container">
             <div class="resource-item">
@@ -39,45 +50,49 @@
                 <span>Gemas:</span>
                 <div class="balance" id="gem-balance">50</div>
             </div>
+
+
         </div>
     </div>
 
     <div class="main-container">
         <div class="container">
             <div class="game-card">
-                <h1 class="text-center mb-4" style="color: #2c3e50; font-weight: 700;">
-                    <i class="fas fa-bolt" style="color: #f39c12;"></i>
-                    Pokémon Battle Arena
-                </h1>
-
+  
                 <div class="menu-buttons">
                     <button class="menu-btn capture" id="capture-btn">
-                        <i class="fas fa-hand-sparkles"></i><br>
-                        Capturar Pokémon<br>
+                        <i class="fas fa-hand"></i><br>
+                        Captura Pokémon<br>
                         <small>1000 moedas</small>
                     </button>
                     
                     <button class="menu-btn boss" id="boss-btn">
-                        <i class="fas fa-dragon"></i><br>
+                        <i class="fas fa-trophy"></i><br>
                         Enfrentar Boss<br>
                         <small>10 gemas</small>
                     </button>
                     
                     <button class="menu-btn market" id="market-btn">
                         <i class="fas fa-store"></i><br>
-                        Mercado<br>
+                        Loja<br>
                         <small>(Em breve)</small>
                     </button>
 
                     <button class="menu-btn collection" id="pc-btn">
-                        <i class="fas fa-desktop"></i><br>
-                        Meus Pokémon
+                        <i class="fas fa-desktop"></i>
+                        PC
+                    </button>
+
+                    <button class="menu-btn events" id="events-btn">
+                        <i class="fa-solid fa-file"></i>
+                        Eventos<br>
+                        <small>(Em breve)</small>
                     </button>
 
                     
                     <button class="menu-btn bag" id="bag-btn">
                         <i class="fas fa-briefcase"></i>
-                        Inventário<br>
+                        Bolsa<br>
                         <small>(Em breve)</small>
                     </button>
 
@@ -86,7 +101,7 @@
             </div>
             <div class="pokemon-card">
                 <div class="text-center mb-4" style="color: #2c3e50; font-weight: 700;">
-                    <p>Pokemons Selecionados:</p>
+                    <p style="font-size: 20px; width:250px; position: absolute; left: 50%; transform: translateX(-50%); top: 2px;">Pokemons Selecionados:</p>
                     <div id="selected-pokemon" class="selected-pokemon">
 
                     </div>

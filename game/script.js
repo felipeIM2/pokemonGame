@@ -74,6 +74,7 @@
         $('#coins-balance').text(gameState.coins);
         $('#xp-balance').text(gameState.xp);
         $('#gem-balance').text(gameState.gems);
+        $('#perfil-name').text(getPerfil.name);
 
         const playerTeam = JSON.parse(localStorage.getItem('playerTeam') || "[]");
         const findteam = pokemons[0].filter(p => playerTeam.includes(p.id));
@@ -208,9 +209,11 @@
 
       })
     })
-
-    $("#market-btn").click(() => alert("Módulo em manutenção!!") )
-
+    
     $("#pc-btn").click(() => location = "./pc");
-
+    
+    $("#market-btn").click(() => alert("Módulo em manutenção!!") )
+    
     $("#bag-btn").click(() => alert("Módulo em manutenção!!"));
+
+    $("#events-btn").click(() => alert("Módulo em manutenção!!"));

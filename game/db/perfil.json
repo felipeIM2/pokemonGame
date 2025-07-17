@@ -1,11 +1,11 @@
 [
   {
     "id": 1,
-    "name":"tester",
+    "name":"teste",
     "resources":[{
       "coins": 1000,
       "gems": 100,
-      "xp": 800
+      "xp": 0
     }]
   }
 ]
