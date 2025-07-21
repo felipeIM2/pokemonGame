@@ -1,189 +1,190 @@
-  
-  let gameState;
+	let gameState = {}
 
-  const typeColors = {
-    Bug:     "#4A7437",  // Verde escuro
-    Dark:    "#2C2C2C",  // Preto/cinza escuro
-    Dragon:  "#4F6DA1",  // Azul acinzentado
-    Electric:"#F4D23C",  // Amarelo vibrante
-    Fairy:   "#D46DB2",  // Rosa escuro
-    Fighting:"#C22E28",  // Vermelho queimado
-    Fire:    "#EE8130",  // Laranja forte
-    Flying:  "#A98FF3",  // Azul lavanda
-    Ghost:   "#735797",  // Roxo escuro
-    Grass:   "#7AC74C",  // Verde folha vibrante
-    Ground:  "#E2BF65",  // Bege amarelado
-    Ice:     "#96D9D6",  // Azul gelo
-    Normal:  "#A8A77A",  // Cinza/bege
-    Poison:  "#A33EA1",  // Roxo escuro
-    Psychic: "#F95587",  // Rosa neon
-    Rock:    "#B6A136",  // Marrom/mostarda
-    Steel:   "#B7B7CE",  // Cinza metálico claro
-    Water:   "#6390F0"   // Azul oceano
-  };
+	const typeColors = {
+			Bug: "#4A7437", Dark: "#2C2C2C", Dragon: "#4F6DA1", Electric: "#F4D23C",
+			Fairy: "#D46DB2", Fighting: "#C22E28", Fire: "#EE8130", Flying: "#A98FF3",
+			Ghost: "#735797", Grass: "#7AC74C", Ground: "#E2BF65", Ice: "#96D9D6",
+			Normal: "#A8A77A", Poison: "#A33EA1", Psychic: "#F95587", Rock: "#B6A136",
+			Steel: "#B7B7CE", Water: "#6390F0"
+	};
 
-  const legendary = [
-    "Articuno",
-    "Zapdos",
-    "Moltres",
-    "Mewtwo",
-    "Mew",
-    "Raikou",
-    "Entei",
-    "Suicune",
-    "Lugia",
-    "Ho-Oh",
-    "Celebi",
-    "Regirock",
-    "Regice",
-    "Registeel",
-    "Latias",
-    "Latios",
-    "Kyogre",
-    "Groudon",
-    "Rayquaza",
-    "Jirachi",
-    "Deoxys"
-  ];
+	const legendary = [
+			"Articuno",
+			"Zapdos",
+			"Moltres",
+			"Mewtwo",
+			"Mew",
+			"Raikou",
+			"Entei",
+			"Suicune",
+			"Lugia",
+			"Ho-Oh",
+			"Celebi",
+			"Regirock",
+			"Regice",
+			"Registeel",
+			"Latias",
+			"Latios",
+			"Kyogre",
+			"Groudon",
+			"Rayquaza",
+			"Jirachi",
+			"Deoxys"
+	];        
+	
+	let pokemons;
+	let moves;
+	let effectiveness;
+	let pcTeam = [];
+	let boss = localStorage.getItem("boss") || [];
+	let mockTeam =localStorage.getItem("playerTeam") || []
 
-    let pokemons;
-    let moves;
-    let effectiveness;
-    let pcTeam = [];
-    let boss = localStorage.getItem("boss") || [];
-    let playerTeam = localStorage.getItem("playerTeam") || [];
-
-
-
-
-
-    $(document).ready(() => {
-      $.when(
-      $.getJSON("./db/perfil.json"),
-      $.getJSON("./db/pc.json")).done(function (perfil, pokemons) {
-
-        let getPerfil = perfil[0][0]
         
-        gameState = {
-          coins: getPerfil.resources[0].coins,
-          gems: getPerfil.resources[0].gems,
-          xp: getPerfil.resources[0].xp,
-          capturedPokemon: []
-        }
+function initializeInterface() {
+		updateResourceDisplay();
+		loadPokemonTeam();
+		setupEventListeners();
+		
+}
 
-        $('#coins-balance').text(gameState.coins);
-        $('#xp-balance').text(gameState.xp);
-        $('#gem-balance').text(gameState.gems);
-        $('#perfil-name').text(getPerfil.name);
+function updateResourceDisplay() {
+	$.when($.getJSON("./db/perfil.json")).done(function (perfil) {
 
-        const playerTeam = JSON.parse(localStorage.getItem('playerTeam') || "[]");
-        const findteam = pokemons[0].filter(p => playerTeam.includes(p.register));
-        // console.log(pokemons)
-        
-        let teamHTML = findteam.map(pokemon => {
-          
-          // console.log(pokemon)
-          const bgColor = typeColors[pokemon.type[0]] || "#FFF"; 
+		gameState = {
+				coins: perfil[0].resources[0].coins,
+				gems: perfil[0].resources[0].gems,
+				xp: perfil[0].resources[0].xp,		
+		};
 
-          return `
-            <div class="pokemon-selected" style="background:${bgColor}">
-              <div>
-                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/${pokemon.id}.gif">
-              </div>
-            </div>
-          `;
-        }).join("");
+		$('#coins-balance').text(perfil[0].resources[0].coins.toLocaleString()) ;
+		$('#xp-balance').text(perfil[0].resources[0].xp.toLocaleString());
+		$('#gem-balance').text(perfil[0].resources[0].gems.toLocaleString());
 
-        $("#selected-pokemon").html(teamHTML);
-      });
-    });
+	})
+}
 
-    $("#capture-btn").on("click", () => { 
-        $.when(
-        $.getJSON("./db/pokedex.json"),
-        $.getJSON("./db/moves.json"),
-        $.getJSON("./db/effectiveness.json")
-        ).done(function (pokeRes, moveRes, effectivenessRes) {
+function loadPokemonTeam() {
+
+	$.when($.getJSON("./db/pc.json")).done(function (pc) {
+		
+	let playerTeam = pc.filter((p) => mockTeam.includes(p.register))
+
+		const loadingSpinner = $('.loading-spinner');
+		const pokemonContainer = $('.selected-pokemon');
+		
+		loadingSpinner[0].style.display = 'flex';
+		pokemonContainer[0].style.display = 'none';
+		
+		setTimeout(() => {
+				const teamHTML = playerTeam.map(pokemon => {
+						const bgColor = typeColors[pokemon.type[0]] || "#A8A77A";
+						
+						return `
+								<div class="pokemon-selected" style="background: linear-gradient(145deg, ${bgColor}88, ${bgColor}44);" title="${pokemon.name}">
+										<img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/${pokemon.id}.gif" 
+													alt="${pokemon.name}" 
+													onerror="this.src='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png'">
+								</div>
+						`;
+				}).join("");
+
+				pokemonContainer[0].innerHTML = teamHTML;
+				loadingSpinner[0].style.display = 'none';
+				pokemonContainer[0].style.display = 'grid';
+				
+				
+				const pokemonCards = $('.pokemon-selected');
+				pokemonCards.forEach((card, index) => {
+						card.style.opacity = '0';
+						card.style.transform = 'translateY(30px) scale(0.8)';
+						setTimeout(() => {
+								card.style.transition = 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
+								card.style.opacity = '1';
+								card.style.transform = 'translateY(0) scale(1)';
+						}, index * 100);
+				});
+		}, 1000);
+	})
+}
+
+function setupEventListeners() {
+	$.when(
+	$.getJSON("./db/pokedex.json"),
+	$.getJSON("./db/moves.json"),
+	).done(function (pokeRes, moveRes) {
             
-         if(gameState.coins < 1000) return alert("Voce não tem moedas suficientes para capturar um pokemons!");
-         if(playerTeam.length <= 0) return alert("Favor selecionar um pokemon para batalhar!");
-          
+		$('#capture-btn').on('click', function() {
+		
+			if(gameState.coins < 1000) return showNotification("Voce não tem moedas suficientes para capturar um pokemons!");
+			if(mockTeam.length <= 0) return showNotification("Favor selecionar um pokemon para batalhar!");
+			 showNotification('Preparando batalha de captura...', 'success');
+				
+					pokemons = pokeRes[0];
+					moves = moveRes[0]; 
+					
+					const evo1 = 70;
+					const evo2= 20;
+					const legendaryChance = 2;
+
+					function getRandomPokemon(pokemons, legendaryList, legendaryIncluded) {
+							
+							const rand = Math.random() * 100;
+
+							if (!legendaryIncluded && rand <= legendaryChance) {
+									const legendaryCandidates = pokemons.filter(p => legendaryList.includes(p.name));
+									if (legendaryCandidates.length > 0) {
+											const chosen = legendaryCandidates[Math.floor(Math.random() * legendaryCandidates.length)];
+											return { pokemon: chosen, legendaryIncluded: true };
+									}
+							}
+
+							const evoRand = Number((Math.random() * 100).toFixed(0));
+							let evoStage;
+
+							if (evoRand <= evo1) {
+								evoStage = 1;
+							} else if (evoRand <= evo2 + evo1) {
+								evoStage = 2;
+							} else {
+								evoStage = 3;
+							}
+
+							const candidates = pokemons.filter(
+								p => p.evo === evoStage && !legendaryList.includes(p.name)
+							);
+
+							if (candidates.length === 0) return null;
+
+							const chosen = candidates[Math.floor(Math.random() * candidates.length)];
+							return { pokemon: chosen, legendaryIncluded };
+					}
+
+					let legendaryIncluded = false;
+
+					while (pcTeam.length < 10) {
+							const result = getRandomPokemon(pokemons, legendary, legendaryIncluded);
+							if (result && result.pokemon) {
+									pcTeam.push(result.pokemon);
+									legendaryIncluded = result.legendaryIncluded;
+							}
+					}
+					
+					localStorage.setItem('pcTeam', JSON.stringify(pcTeam.map(p => p.id)));
+					console.log(pcTeam)
+					setTimeout(() => {
+							this.style.transform = '';
+							// location.href = './capture';
+					}, 1000);
+		});
+					
+		$('#boss-btn').on('click', function() {
+	
+			if(gameState.gems < 10) return showNotification("Voce não tem gemas suficientes para enfrentar um boss!");
+			if(mockTeam.length <= 0) return showNotification("Favor selecionar um pokemon para batalhar!");
+			 showNotification('Preparando batalha contra boss...', 'success');
+
           pokemons = pokeRes[0];
           moves = moveRes[0]; 
-          effectiveness = effectivenessRes[0];
-          
-
-          const evo1 = 70;
-          const evo2= 20;
-          const legendaryChance = 2;
-
-
-          function getRandomPokemon(pokemons, legendaryList, legendaryIncluded) {
-              
-              const rand = Math.random() * 100;
-
-              if (!legendaryIncluded && rand <= legendaryChance) {
-                  const legendaryCandidates = pokemons.filter(p => legendaryList.includes(p.name));
-                  if (legendaryCandidates.length > 0) {
-                      const chosen = legendaryCandidates[Math.floor(Math.random() * legendaryCandidates.length)];
-                      return { pokemon: chosen, legendaryIncluded: true };
-                  }
-              }
-
-              
-              
-              const evoRand = Number((Math.random() * 100).toFixed(0));
-              let evoStage;
-
-              if (evoRand <= evo1) {
-                evoStage = 1;
-              } else if (evoRand <= evo2 + evo1) {
-                evoStage = 2;
-              } else {
-                evoStage = 3;
-              }
-
-              const candidates = pokemons.filter(
-                p => p.evo === evoStage && !legendaryList.includes(p.name)
-              );
-
-              if (candidates.length === 0) return null;
-
-              const chosen = candidates[Math.floor(Math.random() * candidates.length)];
-              return { pokemon: chosen, legendaryIncluded };
-          }
-
-          let legendaryIncluded = false;
-
-          while (pcTeam.length < 10) {
-              const result = getRandomPokemon(pokemons, legendary, legendaryIncluded);
-              if (result && result.pokemon) {
-                  pcTeam.push(result.pokemon);
-                  legendaryIncluded = result.legendaryIncluded;
-              }
-          }
-          
-        // console.log(pcTeam)
-
-          localStorage.setItem('pcTeam', JSON.stringify(pcTeam.map(p => p.id)));
-          location = "./capture"
-
-      })
-    })
-    
-    $("#boss-btn").on("click", () => { 
-        $.when(
-        $.getJSON("./db/pokedex.json"),
-        $.getJSON("./db/moves.json"),
-        $.getJSON("./db/effectiveness.json")
-        ).done(function (pokeRes, moveRes, effectivenessRes) {
-            
-         if(gameState.gems < 10) return alert("Voce não tem gemas suficientes para enfrentar um boss!");
-         if(playerTeam.length <= 0) return alert("Favor selecionar um pokemon para batalhar!");
-
-          pokemons = pokeRes[0];
-          moves = moveRes[0]; 
-          effectiveness = effectivenessRes[0];
           
           if(boss.length === 0) {
 
@@ -199,22 +200,77 @@
             if(legendary.includes(boss[0].name))return createBoss(boss)
 
             localStorage.setItem('boss', JSON.stringify(boss.map(p => p.id)));
-            location = "./boss"
+						this.style.transform = '';
+						
+           	setTimeout(() => {	
+							location = "./boss"
+						}, 1000);
 
           } else {
 
             localStorage.setItem('boss', boss);
-            location = "./boss"
+						this.style.transform = '';
+						
+						setTimeout(() => {	
+							location = "./boss"
+						}, 1000);
 
           }   
+		});
+					
+		['market-btn', 'events-btn', 'bag-btn'].forEach(btnId => {
+				$(btnId).on('click', function() {
 
-      })
-    })
-    
-    $("#pc-btn").click(() => location = "./pc");
-    
-    $("#market-btn").click(() => alert("Módulo em manutenção!!") )
-    
-    $("#bag-btn").click(() => alert("Módulo em manutenção!!"));
+						showNotification('Funcionalidade em desenvolvimento!', 'info');
+				});
+		});
 
-    $("#events-btn").click(() => alert("Módulo em manutenção!!"));
+		$('#pc-btn').on('click', function() {
+				showNotification('Abrindo PC Pokémon...', 'success');
+				location.href = './pc';
+		});
+
+ })
+}
+
+	function showNotification(message, type = 'info') {
+			const notification = document.createElement('div');
+			notification.className = `notification ${type}`;
+			notification.textContent = message;
+			
+			notification.style.cssText = `
+					position: fixed;
+					top: 20px;
+					right: 20px;
+					background: ${type === 'error' ? 'linear-gradient(45deg, #e74c3c, #c0392b)' : 
+											type === 'success' ? 'linear-gradient(45deg, #27ae60, #2ecc71)' : 
+											'linear-gradient(45deg, #3498db, #2980b9)'};
+					color: white;
+					padding: 15px 25px;
+					border-radius: 10px;
+					font-weight: 600;
+					font-family: 'Rajdhani', sans-serif;
+					font-size: 16px;
+					box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+					z-index: 10000; transform: translateX(100%);
+					opacity: 0;
+					transition: all 0.3s ease;
+			`;
+			
+			document.body.appendChild(notification);
+			
+			setTimeout(() => {
+					notification.style.transform = 'translateX(0)';
+					notification.style.opacity = '1';
+			}, 10);
+			
+			setTimeout(() => {
+					notification.style.transform = 'translateX(100%)';
+					notification.style.opacity = '0';
+					setTimeout(() => {
+							notification.remove();
+					}, 300);
+			}, 3000);
+	}
+
+  $(document).on('DOMContentLoaded', initializeInterface);

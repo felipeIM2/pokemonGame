@@ -1,6 +1,6 @@
  [
   {
-    "register":1,
+    "register":9,
     "id":4,
     "name":"Charmander",
     "type":["Fire"],
@@ -12,7 +12,7 @@
     "evo":1,
     "moves":[2,23,1,19]},
   {
-    "register":2,
+    "register":89,
     "id":7,
     "name":"Squirtle",
     "type":["Water"],
@@ -25,7 +25,7 @@
     "moves":[22,3,1,19]
   },
   {
-    "register":3,
+    "register":23,
     "id":1,
     "name":"Bulbasaur",
     "type":["Grass","Poison"],
