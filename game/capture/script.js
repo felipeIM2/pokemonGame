@@ -298,10 +298,6 @@ async function executeTurn(playerMoveName, movesSet) {
     checkFaintAndSwitch();
   }
 
-  setTimeout(() => {
-    
-  }, 2000);
-
   enableActionButtons();
   $('.move-btn').prop('disabled', false);
 }

@@ -34,7 +34,6 @@
 	
 	let pokemons;
 	let moves;
-	let effectiveness;
 	let pcTeam = [];
 	let boss = localStorage.getItem("boss") || [];
 	let mockTeam =localStorage.getItem("playerTeam") || []
@@ -92,17 +91,6 @@ function loadPokemonTeam() {
 				loadingSpinner[0].style.display = 'none';
 				pokemonContainer[0].style.display = 'grid';
 				
-				
-				const pokemonCards = $('.pokemon-selected');
-				pokemonCards.forEach((card, index) => {
-						card.style.opacity = '0';
-						card.style.transform = 'translateY(30px) scale(0.8)';
-						setTimeout(() => {
-								card.style.transition = 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
-								card.style.opacity = '1';
-								card.style.transform = 'translateY(0) scale(1)';
-						}, index * 100);
-				});
 		}, 1000);
 	})
 }
@@ -173,7 +161,7 @@ function setupEventListeners() {
 					console.log(pcTeam)
 					setTimeout(() => {
 							this.style.transform = '';
-							// location.href = './capture';
+							 location.href = './capture';
 					}, 1000);
 		});
 					
@@ -220,7 +208,6 @@ function setupEventListeners() {
 					
 		['market-btn', 'events-btn', 'bag-btn'].forEach(btnId => {
 				$(btnId).on('click', function() {
-
 						showNotification('Funcionalidade em desenvolvimento!', 'info');
 				});
 		});
