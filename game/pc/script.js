@@ -22,7 +22,7 @@ $(document).ready(function () {
       data
         .filter(pokemon => pokemon.name.toLowerCase().includes(filterName))
         .forEach((pokemon) => {
-          const isSelected = selected.includes(pokemon.id);
+          const isSelected = selected.includes(pokemon.register);
           const selectedClass = isSelected ? 'selected' : '';
             
           const card = `

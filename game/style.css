@@ -86,7 +86,8 @@ html {
 
 .main-container {
     padding: 30px 20px;
-    background-color: rgba(230, 229, 227, 0.874);
+    /* background-color: rgba(230, 229, 227, 0.874); */
+    background: #616e663a;
 }
 
 .perfil-name {
@@ -132,30 +133,41 @@ html {
 }
 
 .menu-btn.capture {
-    background: linear-gradient(180deg, #13b140 50%,  #50e67b 100%);
+    /* background: linear-gradient(180deg, #13b140 50%,  #50e67b 100%); */
+    background: #156ca7da;
+    
+    
 }
 
 .menu-btn.boss {
-    /* background: linear-gradient(180deg, #f7ff01 10%, #4e4103 90%); */
-    background: linear-gradient(180deg, #2a0c6a 50%,  #8b1ea3 100%);
-
+    /* background: linear-gradient(180deg, #2a0c6a 50%,  #8b1ea3 100%); */
+    background: #156ca7da;
 }
 
 .menu-btn.market {
-    background: linear-gradient(180deg, #2E75B6 50%, #71b7e3 100%);
+    /* background: linear-gradient(180deg, #2E75B6 50%, #71b7e3 100%); */
+    background: #156ca7da;
+
 }
 
 .menu-btn.collection {
-    background: linear-gradient(180deg, #da2225 50%, #d9730d 100%);
+    /* background: linear-gradient(180deg, #da2225 50%, #d9730d 100%); */
+    background: #156ca7da;
+
 }
 
 .menu-btn.bag {
-    background: linear-gradient(180deg, #823502 50%, #bf7048 100%);
+    /* background: linear-gradient(180deg, #823502 50%, #bf7048 100%); */
+    background: #156ca7da;
+
 }
 
 .menu-btn.events {
-    background: linear-gradient(140deg, yellow 10%, black 70%);
+    /* background: linear-gradient(140deg, yellow 10%, black 70%); */
+    background: #156ca7da;
+
 }
+
 
 .reward-popup {
     position: fixed;
@@ -173,11 +185,11 @@ html {
 
 .pokemon-card {
     /* border: 6px double #000000; */
-    /* background: white; */
+    background: #d6d9db2a;
     border-radius: 30px;
-    padding: 35px;
+    padding: 80px;
     margin-bottom: 30px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
     backdrop-filter: blur(10px);
 }
 
@@ -186,6 +198,7 @@ html {
     grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
     gap: 20px;
     place-items: center;
+    /* color: wheat; */
 }
 
 .pokemon-selected {
@@ -293,6 +306,7 @@ html {
 
     .main-container {
         padding: 20px 10px;
+        
     }
 
     .game-card {
